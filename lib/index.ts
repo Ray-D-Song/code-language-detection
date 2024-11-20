@@ -157,34 +157,47 @@ export class GuessLang {
       content = content.replace(/\r\n/g, '\n');
     }
 
-    // call out to the model
     const predicted = await this._model!.executeAsync(tensor([content]));
-    const probabilitiesTensor: Tensor<Rank> = Array.isArray(predicted) ? predicted[0]! : predicted;
-    const languageTensor: Tensor<Rank> = Array.isArray(predicted) ? predicted[1]! : predicted;
-    const probabilities = probabilitiesTensor.dataSync() as Float32Array;
-    const langs: Array<string> = languageTensor.dataSync() as any;
+    try {
+      // call out to the model
+      const probabilitiesTensor: Tensor<Rank> = Array.isArray(predicted) ? predicted[0]! : predicted;
+      const languageTensor: Tensor<Rank> = Array.isArray(predicted) ? predicted[1]! : predicted;
+      const probabilities = probabilitiesTensor.dataSync() as Float32Array;
+      const langs: Array<string> = languageTensor.dataSync() as any;
 
-    const objs: Array<ModelResult> = [];
-    for (let i = 0; i < langs.length; i++) {
-      objs.push({
-        languageId: langs[i],
-        confidence: probabilities[i],
+      const objs: Array<ModelResult> = [];
+      for (let i = 0; i < langs.length; i++) {
+        objs.push({
+          languageId: langs[i],
+          confidence: probabilities[i],
+        });
+      }
+
+      let maxIndex = 0;
+      for (let i = 0; i < probabilities.length; i++) {
+        if (probabilities[i] > probabilities[maxIndex]) {
+          maxIndex = i;
+        }
+      }
+
+      return objs.sort((a, b) => {
+        return b.confidence - a.confidence;
       });
-    }
-
-    let maxIndex = 0;
-    for (let i = 0; i < probabilities.length; i++) {
-      if (probabilities[i] > probabilities[maxIndex]) {
-        maxIndex = i;
+    } finally {
+      if (Array.isArray(predicted)) {
+        predicted.forEach((tensor) => {
+          tensor.dispose();
+        });
+      } else {
+        predicted.dispose();
       }
     }
-
-    return objs.sort((a, b) => {
-      return b.confidence - a.confidence;
-    });
   }
 
   public dispose() {
     this._model?.dispose();
+    this._modelJson = undefined;
+    this._weights = undefined;
+    this._model = undefined;
   }
 }

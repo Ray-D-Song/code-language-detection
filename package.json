@@ -1,44 +1,60 @@
 {
-  "name": "guesslang-js",
-  "version": "0.0.3",
+  "name": "@ray-d-song/guesslang-js",
+  "version": "0.1.0-alpha.1",
   "description": "Use guesslang's ML model to detect source code languages",
   "main": "dist/lib/guesslang.min.js",
-  "module": "dist/lib/guesslang.min.js",
+  "module": "dist/lib/guesslang.esm.js",
   "types": "dist/lib/index.d.ts",
+  "private": false,
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && webpack --mode production",
     "watch": "npm run clean && webpack --watch",
-    "test": "mocha --recursive dist/test/**/*.test.js",
-    "pretest": "npm run clean && tsc --build ./test",
-    "prepack": "npm run build",
-    "prepublishOnly": "npm test && npm run build"
+    "test": "vitest",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hieplpvip/guesslang-js.git"
+    "url": "git+https://github.com/Ray-D-Song/guesslang-js.git"
   },
-  "author": "Bao-Hiep Le",
+  "author": "Ray-D-Song",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hieplpvip/guesslang-js/issues"
+    "url": "https://github.com/Ray-D-Song/guesslang-js/issues"
   },
-  "homepage": "https://github.com/hieplpvip/guesslang-js#readme",
+  "homepage": "https://github.com/Ray-D-Song/guesslang-js#readme",
   "devDependencies": {
     "@tensorflow/tfjs-backend-cpu": "^3.9.0",
     "@tensorflow/tfjs-converter": "^3.9.0",
     "@tensorflow/tfjs-core": "^3.9.0",
     "@types/chai": "^4.2.22",
-    "@types/mocha": "9.0.0",
     "@types/node": "^16.10.2",
+    "@vitest/web-worker": "^2.1.5",
     "chai": "^4.3.4",
-    "mocha": "9.1.2",
     "prettier": "^2.4.1",
     "rimraf": "3.0.2",
     "terser-webpack-plugin": "^5.2.4",
     "ts-loader": "^9.2.6",
     "typescript": "^4.4.3",
+    "vitest": "^2.1.5",
     "webpack": "^5.56.1",
     "webpack-cli": "^4.8.0"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/lib/guesslang.esm.js",
+      "require": "./dist/lib/guesslang.min.js",
+      "default": "./dist/lib/guesslang.min.js"
+    },
+    "./worker": "./dist/lib/worker.min.js",
+    "./worker-wrapper": "./dist/lib/worker-wrapper.min.js"
+  },
+  "files": [
+    "dist/lib/guesslang.min.js",
+    "dist/lib/guesslang.esm.js",
+    "dist/lib/worker.min.js",
+    "dist/lib/worker-wrapper.min.js",
+    "dist/lib/index.d.ts"
+  ]
 }

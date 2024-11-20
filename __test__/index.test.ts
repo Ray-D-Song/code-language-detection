@@ -1,6 +1,6 @@
-import { expect } from 'chai';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { describe, it, expect } from 'vitest';
 import { GuessLang, ModelResult } from '../lib';
 
 const expectedRelativeConfidence = 0.2;
@@ -67,7 +67,7 @@ async function modelJsonLoaderFunc(): Promise<{ [key: string]: any }> {
   const path = await import('path');
 
   return new Promise<any>((resolve, reject) => {
-    fs.readFile(path.join(__dirname, '..', '..', 'model', 'model.json'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'model', 'model.json'), (err, data) => {
       if (err) {
         reject(err);
         return;
@@ -82,7 +82,7 @@ async function weightsLoaderFunc(): Promise<ArrayBuffer> {
   const path = await import('path');
 
   return new Promise<ArrayBuffer>((resolve, reject) => {
-    fs.readFile(path.join(__dirname, '..', '..', 'model', 'group1-shard1of1.bin'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'model', 'group1-shard1of1.bin'), (err, data) => {
       if (err) {
         reject(err);
         return;
@@ -201,7 +201,7 @@ while($true) {
   });
 
   it('test large file', async () => {
-    const result = await modelOperations.runModel(readFileSync(path.resolve(__dirname, '..', '..', 'test', 'large.ts.txt')).toString());
+    const result = await modelOperations.runModel(readFileSync(path.resolve(__dirname, '..', '__test__', 'large.ts.txt')).toString());
 
     expect(result[0].languageId).to.equal('ts');
     expect(result[0].confidence).to.greaterThan(expectedRelativeConfidence);

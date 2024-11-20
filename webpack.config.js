@@ -7,8 +7,8 @@ const { version } = require('./package.json');
 
 module.exports = function (env, argv) {
   const mode = argv.mode || 'none';
-  return {
-    entry: './lib/index.ts',
+  
+  const commonConfig = {
     mode: mode,
     target: 'web',
     output: {
@@ -86,4 +86,44 @@ module.exports = function (env, argv) {
       timings: true,
     },
   };
+
+  const umdConfig = {
+    ...commonConfig,
+    entry: './lib/index.ts',
+  };
+
+  const esmConfig = {
+    ...commonConfig,
+    entry: './lib/index.ts',
+    experiments: {
+      outputModule: true,
+    },
+    output: {
+      path: path.resolve(__dirname, 'dist', 'lib'),
+      filename: 'guesslang.esm.js',
+      library: {
+        type: 'module',
+      },
+    },
+  };
+
+  const workerConfig = {
+    ...commonConfig,
+    entry: './lib/worker.ts',
+    output: {
+      ...commonConfig.output,
+      filename: 'worker.min.js'
+    }
+  };
+
+  const workerWrapperConfig = {
+    ...commonConfig,
+    entry: './lib/worker-wrapper.ts',
+    output: {
+      ...commonConfig.output,
+      filename: 'worker-wrapper.min.js'
+    }
+  };
+
+  return [umdConfig, esmConfig, workerConfig, workerWrapperConfig];
 };

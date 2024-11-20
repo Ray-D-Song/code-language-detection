@@ -4,14 +4,39 @@ A JavaScript library that uses machine learning to detect source code languages.
 
 Inspired by and modified from [vscode-languagedetection](https://github.com/microsoft/vscode-languagedetection) to add browser support.
 
+This is a fork of https://github.com/hieplpvip/guesslang-js, aimed at:
+- esm and web worker support
+- fix memory leak issues
+
 ## Usage
 
 This library is intended to be used only in browser. For Node.JS, please consider using [vscode-languagedetection](https://github.com/microsoft/vscode-languagedetection).
 
-Load the library:
+Install via `npm`:
+```bash
+npm install @ray-d-song/guesslang-js
+
+# or yarn
+yarn add @ray-d-song/guesslang-js
+
+# or pnpm
+pnpm add @ray-d-song/guesslang-js
+```
+
+Now you can use it in your project:
+
+```js
+import GuessLang from '@ray-d-song/guesslang-js';
+```
+
+Or use it directly in the browser:
 
 ```html
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/guesslang-js@latest/dist/lib/guesslang.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ray-d-song/guesslang-js@latest/dist/guesslang.min.js"></script>
+
+<script>
+  const guessLang = new GuessLang();
+</script>
 ```
 
 Declare sample code:
@@ -44,7 +69,9 @@ fn area(rectangle: &Rectangle) -> u32 {
 ### With Promise
 
 ```js
+// You should only create one guesslang instance
 const guessLang = new GuessLang();
+
 guessLang.runModel(code).then((result) => {
   console.log(result);
 });
@@ -54,6 +81,7 @@ guessLang.runModel(code).then((result) => {
 
 ```js
 const guessLang = new GuessLang();
+
 const result = await guessLang.runModel(code);
 console.log(result);
 ```
