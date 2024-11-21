@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "node",
     "noEmitOnError": false,
     "strict": true,
@@ -12,7 +12,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "declaration": true,
-    "outDir": "dist/lib"
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": "./dist/types",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
+    "resolveJsonModule": true
   },
   "include": [
     "lib/**/*.ts"

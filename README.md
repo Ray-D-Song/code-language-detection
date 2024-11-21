@@ -7,6 +7,7 @@ Inspired by and modified from [vscode-languagedetection](https://github.com/micr
 This is a fork of https://github.com/hieplpvip/guesslang-js, aimed at:
 - esm and web worker support
 - fix memory leak issues
+- better build process
 
 ## Usage
 

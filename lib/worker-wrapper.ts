@@ -1,4 +1,5 @@
 import type { ModelResult } from './index';
+import Worker from './worker?worker&inline';
 
 interface CommonWorker {
   postMessage(message: any): void;
@@ -17,8 +18,8 @@ export class GuessLangWorker {
     reject: (error: Error) => void;
   }>();
 
-  constructor(workerUrl: string) {
-    const worker = new Worker(workerUrl);
+  constructor() {
+    const worker = new Worker();
     worker.onmessage = this.handleMessage.bind(this);
     this.worker = worker as BrowserWorker;
   }

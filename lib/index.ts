@@ -1,6 +1,9 @@
 import { Rank, tensor, Tensor, io, setBackend, env } from '@tensorflow/tfjs-core';
 import { GraphModel, loadGraphModel } from '@tensorflow/tfjs-converter';
 import '@tensorflow/tfjs-backend-cpu';
+import MODEL_JSON from '../model/model.json';
+import MODEL_WEIGHTS from './bin';
+import { base64ToArrayBuffer } from './base64';
 
 export interface ModelResult {
   languageId: string;
@@ -71,18 +74,18 @@ export interface GuessLangOptions {
   normalizeNewline?: boolean;
 }
 
+let isBackendRegistered = false;
+
 export class GuessLang {
   private static DEFAULT_MAX_CONTENT_SIZE = 100000;
   private static DEFAULT_MIN_CONTENT_SIZE = 20;
 
   private static NODE_MODEL_JSON_FUNC: () => Promise<{ [key: string]: any }> = async () => {
-    const { modelLoadJson } = await import('./loader');
-    return modelLoadJson();
+    return MODEL_JSON;
   };
 
   private static NODE_WEIGHTS_FUNC: () => Promise<ArrayBuffer> = async () => {
-    const { modelLoadWeights } = await import('./loader');
-    return modelLoadWeights();
+    return base64ToArrayBuffer(MODEL_WEIGHTS);
   };
 
   private _model: GraphModel | undefined;
@@ -125,14 +128,15 @@ export class GuessLang {
       return;
     }
 
-    // These 2 env set's just suppress some warnings that get logged that
-    // are not applicable for this use case.
-    const tfEnv = env();
-    tfEnv.set('IS_NODE', false);
-    tfEnv.set('PROD', true);
+    if (!isBackendRegistered) {
+      const tfEnv = env();
+      tfEnv.set('IS_NODE', false);
+      tfEnv.set('PROD', true);
 
-    if (!(await setBackend('cpu'))) {
-      throw new Error('Unable to set backend to CPU.');
+      if (!(await setBackend('cpu'))) {
+        throw new Error('Unable to set backend to CPU.');
+      }
+      isBackendRegistered = true;
     }
 
     const resolvedModelJSON = await this.getModelJSON();
