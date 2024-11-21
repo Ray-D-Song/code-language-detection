@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="dark">
+  <head>
+    <title>guesslang-js</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+      :root {
+        --font-sans: 'Inter', sans-serif;
+      }
+      
+      body {
+        font-family: var(--font-sans);
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-50 p-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-semibold text-zinc-50">Code Language Detection</h1>
+        
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com/ray-d-song/guesslang-js" target="_blank" class="text-zinc-400 hover:text-zinc-50 transition-colors">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="https://www.npmjs.com/package/@ray-d-song/guesslang-js" target="_blank" class="text-zinc-400 hover:text-zinc-50 transition-colors">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="text-sm text-zinc-400">Input Code</label>
+          <textarea 
+            id="code"
+            class="w-full h-[600px] rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm ring-offset-zinc-950 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-800 focus:ring-offset-2"
+          ></textarea>
+        </div>
+        
+        <div class="space-y-2">
+          <label class="text-sm text-zinc-400">Detection Result</label>
+          <textarea 
+            id="result"
+            readonly
+            class="w-full h-[600px] rounded-md border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm ring-offset-zinc-950 placeholder:text-zinc-400"
+          ></textarea>
+        </div>
+      </div>
+
+      <button 
+        id="detect"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-zinc-950 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-800 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/90 h-10 px-4 py-2"
+      >
+        Submit
+      </button>
+    </div>
+
+    <script type="module">
+      import { GuessLang } from './guesslang-js.mjs';
+      document.getElementById('code').value = `struct Rectangle {
+  width: u32,
+  height: u32,
+}
+
+fn main() {
+  let rect1 = Rectangle {
+    width: 30,
+    height: 50,
+  };
+
+  println!(
+    "The area of the rectangle is {} square pixels.",
+    area(&rect1)
+  );
+}
+
+fn area(rectangle: &Rectangle) -> u32 {
+  rectangle.width * rectangle.height
+}`;
+
+      var guessLang = new GuessLang({ minContentSize: 0 });
+      document.getElementById('detect').onclick = function () {
+        var code = document.getElementById('code').value;
+        guessLang.runModel(code).then((result) => {
+          document.getElementById('result').value = JSON.stringify(result, null, 2);
+        });
+      };
+    </script>
+  </body>
+</html>

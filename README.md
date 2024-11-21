@@ -27,17 +27,7 @@ pnpm add @ray-d-song/guesslang-js
 Now you can use it in your project:
 
 ```js
-import GuessLang from '@ray-d-song/guesslang-js';
-```
-
-Or use it directly in the browser:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@ray-d-song/guesslang-js@latest/dist/guesslang.min.js"></script>
-
-<script>
-  const guessLang = new GuessLang();
-</script>
+import { GuessLang } from '@ray-d-song/guesslang-js';
 ```
 
 Declare sample code:
@@ -83,6 +73,16 @@ guessLang.runModel(code).then((result) => {
 ```js
 const guessLang = new GuessLang();
 
+const result = await guessLang.runModel(code);
+console.log(result);
+```
+
+### With Web Worker
+
+```js
+import { GuessLangWorker } from '@ray-d-song/guesslang-js/worker';
+
+const guessLang = new GuessLangWorker();
 const result = await guessLang.runModel(code);
 console.log(result);
 ```

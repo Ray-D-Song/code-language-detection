@@ -30,7 +30,7 @@ export default defineConfig(() => {
       lib: {
         name: 'guesslang',
         entry: './lib/index.ts',
-        formats: ['es', 'umd'] satisfies LibraryFormats[]
+        formats: ['es'] satisfies LibraryFormats[]
       }
     },
   }

@@ -1,6 +1,6 @@
 {
   "name": "@ray-d-song/guesslang-js",
-  "version": "0.1.0-alpha.9",
+  "version": "0.1.0",
   "description": "Use guesslang's ML model to detect source code languages",
   "private": false,
   "scripts": {
